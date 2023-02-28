@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--利用dubbo，向zookpeer对接消费者-->
+    <!--选定注册中心-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"></dubbo:registry>
+    <!--设置消费者模块名-->
+    <dubbo:application name="travel_web"></dubbo:application>
+    <!--自动扫描-->
+    <dubbo:annotation package="com.yangxinyu.controller"></dubbo:annotation>
+
+    <!--视图解析器-->
+    <bean id="thymeleafViewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="order" value="1"/>
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="templateEngine">
+            <bean class="org.thymeleaf.spring5.SpringTemplateEngine">
+                <property name="templateResolver">
+                    <bean class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+                        <!-- prefix属性：配置视图前缀 -->
+                        <property name="prefix" value="/"/>
+
+                        <!-- suffix属性：配置视图后缀 -->
+                        <property name="suffix" value=".html"/>
+
+                        <property name="characterEncoding" value="UTF-8"/>
+                        <property name="templateMode" value="HTML5"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <!--静态资源-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!--文件上传-->
+    <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" name="multipartResolver">
+        <!--配置字符集，新版SpringMVC已经默认为UTF-8-->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!--上传文件的大小100kb-->
+        <property name="maxUploadSize" value="102400"></property>
+    </bean>
+</beans>

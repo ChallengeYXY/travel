@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yangxinyu.dao.TravelGroupDao">
+    <!--添加跟团游，回填跟团游主键-->
+    <insert id="addTravelGroup" parameterType="com.yangxinyu.entity.TravelGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_travelgroup(`code`,`name`,helpCode,sex,remark,attention)
+        VALUES(#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+    <!--添加跟团游与自由行中间表数据-->
+    <insert id="addTravelgroupAndTravelitem">
+        INSERT INTO t_travelgroup_travelitem(travelgroup_id,travelitem_id)
+        VALUES(#{param1},#{param2});
+    </insert>
+    <!--分页查询跟团游-->
+    <select id="findPage" resultType="com.yangxinyu.entity.TravelGroup">
+        SELECT id,`code`,`name`, helpCode,sex,remark,attention
+        FROM t_travelgroup
+        <where>
+            <if test="value!=null and value.length>0">
+                code=#{value} or helpCode=#{value} or `name` like concat("%",#{value},"%")
+            </if>
+        </where>
+    </select>
+    <!--通过id查询跟团游-->
+    <select id="getTravelGroupById" resultType="com.yangxinyu.entity.TravelGroup" resultMap="getTravelGroupMap">
+        SELECT tg.id travelgroup_id,tg.`code` travelgroup_code,tg.`name` travelgroup_name,tg.helpCode travelgroup_helpcode,tg.sex travelgroup_sex,tg.remark travelgroup_remark,tg.attention t_travelgroup_travelitem,
+               tgi.travelitem_id,
+               ti.`code` travelitem_code,ti.`name` travelitem_name,ti.sex travelitem_sex,ti.age travelitem_age,ti.price travelitem_price,ti.type travelitem_type,ti.attention travelitem_attention,ti.remark travelitem_remark
+        FROM (t_travelgroup_travelitem tgi RIGHT JOIN t_travelgroup tg ON tgi.travelgroup_id=tg.id) LEFT JOIN t_travelitem ti ON travelitem_id=ti.id
+        WHERE tg.id=#{value };
+    </select>
+    <resultMap id="getTravelGroupMap" type="com.yangxinyu.entity.TravelGroup">
+        <id property="id" column="travelgroup_id"></id>
+        <result property="code" column="travelgroup_code"></result>
+        <result property="name" column="travelgroup_name"></result>
+        <result property="helpCode" column="travelgroup_helpcode"></result>
+        <result property="sex" column="travelgroup_sex"></result>
+        <result property="remark" column="travelgroup_remark"></result>
+        <result property="attention" column="travelgroup_attention"></result>
+
+        <collection property="travelItems" ofType="com.yangxinyu.entity.TravelItem" >
+            <id property="id" column="travelitem_id"></id>
+            <result property="code" column="travelitem_code"></result>
+            <result property="name" column="travelitem_name"></result>
+            <result property="sex" column="travelitem_sex"></result>
+            <result property="age" column="travelitem_age"></result>
+            <result property="price" column="travelitem_price"></result>
+            <result property="type" column="travelitem_type"></result>
+            <result property="remark" column="travelitem_remark"></result>
+            <result property="attention" column="travelitem_atention"></result>
+        </collection>
+    </resultMap>
+
+    <!--修改跟团游-->
+    <update id="updateTravelGroup" parameterType="com.yangxinyu.entity.TravelGroup">
+        UPDATE t_travelgroup
+        <set>
+            <if test="code!=null and code.length>0">
+                `code`=#{code},
+            </if>
+            <if test="name!=null and name.length>0">
+                `name`=#{name},
+            </if>
+            <if test="helpCode!=null and helpCode.length>0">
+                helpCode=#{helpCode},
+            </if>
+            <if test="sex!=null and sex.length>0">
+                sex=#{sex},
+            </if>
+            <if test="remark!=null and remark.length>0">
+                remark=#{remark},
+            </if>
+            <if test="attention!=null and attention.length>0">
+                attention=#{attention}
+            </if>
+        </set>
+        WHERE id=#{id};
+    </update>
+
+    <!--删除中间表所有信息-->
+    <delete id="deleteAllByTravelGroupId" parameterType="int">
+        DELETE FROM t_travelgroup_travelitem
+        WHERE travelgroup_id=#{value };
+    </delete>
+
+
+    <!--查询所有跟团游-->
+    <select id="getAllTravelGroup" resultType="list" resultMap="getTravelGroupMap">
+        SELECT tg.id travelgroup_id,tg.`code` travelgroup_code,tg.`name` travelgroup_name,tg.helpCode travelgroup_helpcode,tg.sex travelgroup_sex,tg.remark travelgroup_remark,tg.attention t_travelgroup_travelitem,
+               tgi.travelitem_id,
+               ti.`code` travelitem_code,ti.`name` travelitem_name,ti.sex travelitem_sex,ti.age travelitem_age,ti.price travelitem_price,ti.type travelitem_type,ti.attention travelitem_attention,ti.remark travelitem_remark
+        FROM (t_travelgroup_travelitem tgi RIGHT JOIN t_travelgroup tg ON tgi.travelgroup_id=tg.id) LEFT JOIN t_travelitem ti ON travelitem_id=ti.id
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

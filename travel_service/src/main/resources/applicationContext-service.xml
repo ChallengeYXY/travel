@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--选定注册中心-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"></dubbo:registry>
+    <!--设置提供者模块参数-->
+    <dubbo:protocol name="dubbo" port="20881"></dubbo:protocol>
+    <!--设置提供者模块名-->
+    <dubbo:application name="travel_service"></dubbo:application>
+    <!--dubbo自动扫描-->
+    <dubbo:annotation package="com.yangxinyu.service"></dubbo:annotation>
+    <!--防止统一服务超时重试-->
+    <dubbo:reference interface="com.yangxinyu.service.TravelItemService" retries="3" timeout="20000"></dubbo:reference>
+</beans>

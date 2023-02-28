@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:contest="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--自动扫描-->
+    <contest:component-scan base-package="com.yangxinyu"></contest:component-scan>
+
+    <!--将任务放入spring的IOC容器-->
+    <bean id="clearImg" class="com.yangxinyu.job.ClearImg"></bean>
+    <!--导入容器创建的任务-->
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="clearImg"></property>
+        <property name="targetMethod" value="clearSetmealImg"></property>
+    </bean>
+    <!--创建任务规则-->
+    <bean id="trigger01" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!--目标任务对应的类-->
+        <property name="jobDetail" ref="jobDetail"></property>
+        <!--目标任务方法名-->
+        <property name="cronExpression" value="0 0/1 * * * ?"></property>
+    </bean>
+    <!--启动-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--可以指定多个任务-->
+        <property name="triggers">
+            <array>
+                <ref bean="trigger01"></ref>
+            </array>
+        </property>
+    </bean>
+</beans>
