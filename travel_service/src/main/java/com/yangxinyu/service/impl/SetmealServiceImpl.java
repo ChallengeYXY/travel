@@ -3,6 +3,7 @@ package com.yangxinyu.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.yangxinyu.constant.RedisMessageConstant;
 import com.yangxinyu.dao.SetmealDao;
 import com.yangxinyu.entity.PageResult;
 import com.yangxinyu.entity.QueryPageBean;
@@ -10,6 +11,8 @@ import com.yangxinyu.entity.Setmeal;
 import com.yangxinyu.qiniu.QiniuUtils;
 import com.yangxinyu.qiniu.RedisConstant;
 import com.yangxinyu.service.SetmealService;
+import com.yangxinyu.util.SMSUtils;
+import com.yangxinyu.util.ValidateCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -93,5 +96,18 @@ public class SetmealServiceImpl implements SetmealService {
     public Setmeal getSetmealByIdSimple(Integer id) {
         Setmeal setmeal = setmealDao.getSetmealByIdSimple(id);
         return setmeal;
+    }
+
+    @Override
+    public void sendMessageCode(String phone) throws Exception {
+        //生成验证码
+        Integer messageCode = ValidateCodeUtils.generateValidateCode(4);
+        //发送验证码
+        SMSUtils.sendShortMessage(phone,messageCode.toString());
+        //将验证码存入Redis，5分钟内有效
+        Jedis jedisPoolResource = jedisPool.getResource();
+        jedisPoolResource.select(1);
+        jedisPoolResource.set(RedisMessageConstant.SENDTYPE_ORDER+phone,messageCode.toString());
+        jedisPoolResource.expire(RedisMessageConstant.SENDTYPE_ORDER+phone,300);
     }
 }

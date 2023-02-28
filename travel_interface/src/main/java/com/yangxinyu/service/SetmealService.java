@@ -45,4 +45,10 @@ public interface SetmealService {
      * @return
      */
     Setmeal getSetmealByIdSimple(Integer id);
+
+    /**
+     * 发送验证码
+     * @param phone
+     */
+    void sendMessageCode(String phone) throws Exception;
 }

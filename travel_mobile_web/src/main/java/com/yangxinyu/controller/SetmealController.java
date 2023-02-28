@@ -48,4 +48,21 @@ public class SetmealController {
         Setmeal setmeal = setmealService.getSetmealByIdSimple(id);
         return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
     }
+
+    /**
+     * 发送验证码
+     * @param phone
+     * @return
+     */
+    @RequestMapping("/sendMessageCode")
+    public Result sendMessageCode(String phone){
+        try {
+            setmealService.sendMessageCode(phone);
+            return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.SEND_VALIDATECODE_FAIL);
+        }
+
+    }
 }

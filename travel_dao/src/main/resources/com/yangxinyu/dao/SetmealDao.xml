@@ -51,6 +51,7 @@
 
     <!--根据id套餐简单信息-->
     <select id="getSetmealByIdSimple" parameterType="int" resultType="com.yangxinyu.entity.Setmeal">
-
+        SELECT id,`name`,`code`,helpCode,sex,age,price,remark,attention,img
+        FROM t_setmeal WHERE id = #{id};
     </select>
 </mapper>
