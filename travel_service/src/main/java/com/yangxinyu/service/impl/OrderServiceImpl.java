@@ -5,6 +5,9 @@ import com.yangxinyu.constant.RedisMessageConstant;
 import com.yangxinyu.dao.MemberDao;
 import com.yangxinyu.dao.OrderDao;
 import com.yangxinyu.dao.OrderSettingDao;
+import com.yangxinyu.entity.Member;
+import com.yangxinyu.entity.Order;
+import com.yangxinyu.entity.OrderSetting;
 import com.yangxinyu.qiniu.RedisConstant;
 import com.yangxinyu.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +47,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean checkOrderDate(String orderDate) {
+
         //查询预约日期
         int orderSettingByOrderDate = orderSettingDao.getOrderSettingByOrderDate(orderDate);
+        System.out.println(orderSettingByOrderDate);
         if (orderSettingByOrderDate<=0){
             //日期不存在
             return false;
         }
+        //查询预约情况
+        OrderSetting orderSetting = orderSettingDao.getOrderSettingByOrderDate2(orderDate);
+        if (orderSetting.getNumber()<=orderSetting.getReservations()){
+            //已经预约满了
+            return false;
+        }
+        //可以正常预约
+        orderSettingDao.updateReservationsByOrderDate(orderDate,orderSetting.getReservations()+1);
 
+        return true;
+    }
 
-        return false;
+    @Override
+    public void addOrder(Member member, Order order) {
+        Member member1 = memberDao.getMemberByIdCard(member);
+        if (member1!=null){
+            order.setMemberId(member1.getId());
+            orderDao.addOrder(order);
+        }
     }
 }

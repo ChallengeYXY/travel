@@ -3,5 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxinyu.dao.MemberDao">
+    <!--通过身份证号查找用户-->
+    <select id="getMemberByIdCard" parameterType="com.yangxinyu.entity.Member" resultType="com.yangxinyu.entity.Member">
+        SELECT id,fileNumber,`name`,sex,idCard,phoneNumber,regTime,`password`,email,birthday,remark
+        FROM t_member
+        WHERE idCard=#{idCard }
+    </select>
 
+    <insert id="addMember">
+        INSERT INTO t_member
+        (fileNumber,`name`,sex,idCard,phoneNumber,regTime,`password`,email,birthday,remark)
+        VALUES(#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark});
+    </insert>
 </mapper>

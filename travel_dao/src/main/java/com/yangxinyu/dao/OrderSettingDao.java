@@ -16,7 +16,7 @@ public interface OrderSettingDao {
     void addOrderSetting(int number, String orderSetting,int reservations);
 
     /**
-     * 根据日期查询预约管理
+     * 根据日期查询预约管理数
      * @param orderDate
      * @return 返回查询行数
      */
@@ -42,4 +42,18 @@ public interface OrderSettingDao {
      * @param num
      */
     void setNumberByDate(String date, Integer num);
+
+    /**
+     * 根据日期查询预约管理
+     * @param orderDate
+     * @return
+     */
+    OrderSetting getOrderSettingByOrderDate2(String orderDate);
+
+    /**
+     * 根据日期更新已经预约人数
+     * @param orderDate
+     * @param reservations
+     */
+    void updateReservationsByOrderDate(String orderDate, int reservations);
 }

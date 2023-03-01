@@ -27,4 +27,12 @@
     <update id="setNumberByDate" parameterType="map">
         UPDATE t_ordersetting SET number=#{param2} WHERE orderDate=#{param1}
     </update>
+    <!--根据日期查询预约管理-->
+    <select id="getOrderSettingByOrderDate2" resultType="com.yangxinyu.entity.OrderSetting" parameterType="string">
+        SELECT orderDate,number,reservations  FROM t_ordersetting WHERE orderDate=#{value}
+    </select>
+    <!--根据日期修改已经预约的人数-->
+    <update id="updateReservationsByOrderDate" parameterType="map">
+        UPDATE t_ordersetting SET reservations=#{param2} WHERE orderDate=#{param1}
+    </update>
 </mapper>

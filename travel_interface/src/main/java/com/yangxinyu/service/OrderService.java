@@ -1,5 +1,8 @@
 package com.yangxinyu.service;
 
+import com.yangxinyu.entity.Member;
+import com.yangxinyu.entity.Order;
+
 /**
  * @BelongsProject : travel
  * @BelongsPackage : com.yangxinyu.service
@@ -24,4 +27,11 @@ public interface OrderService {
      * @return
      */
     boolean checkOrderDate(String orderDate);
+
+    /**
+     * 添加订单信息
+     * @param
+     * @param order
+     */
+    void addOrder(Member member, Order order);
 }
