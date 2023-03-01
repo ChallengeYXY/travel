@@ -106,10 +106,13 @@
                 data:{
                     setmeal:{},//套餐信息
                     orderInfo:{
+                        name:null,//姓名
                         setmealId:id,
                         sex:'1',
                         telephone:null,//手机号
-                        orderDate:null //日期
+                        orderDate:null,//日期
+                        idCard:null,//身份证号
+                        validateCode:null//验证码
                     }//预约信息
                 },
                 methods:{
@@ -128,7 +131,6 @@
                             //按钮30秒倒计时
                             validateCodeButton = $("#validateCodeButton")[0];
                             clock = window.setInterval(doLoop, 1000); //一秒执行一次
-
                             //发送验证码
                             axios.get("/setmeal/sendMessageCode?phone="+phone).then((resp)=>{
                                 if (resp.data.flag){
@@ -137,15 +139,32 @@
                                         type: 'success'
                                     });
                                 }
-
                             }).catch();
                         }
 
                     },
                     //提交预约
                     submitOrder(){
+                        //验证身份证号
+                        var idCard = this.orderInfo.idCard;
+                        console.log(idCard);
+                        if (!checkIdCard(idCard)){
+                            //身份证号不合法
+                            this.$message({
+                                message: '身份证号不合法！',
+                                type: 'warning'
+                            });
+                        }else {
+                            //提交预约信息
+                            axios.post("/order/saveOrder",this.orderInfo).then((resp)=>{
+                                if (resp.data.flag){
+
+                                }
+                            }).catch();
+                        }
                     }
                 },
+                //获取套餐详情
                 mounted(){
                     axios.get("/setmeal/getSetmealByIdSimple?id="+id).then((resp)=>{
                         if (resp.data.flag){
