@@ -15,6 +15,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -77,10 +78,13 @@ public class OrderServiceImpl implements OrderService {
             //获取人员id
             order.setMemberId(member1.getId());
             //查询订单是否存在
-            Order order1 = orderDao.getOrderByMemberAndOrderDateAndSetmealId(order.getMemberId(),new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate()),order.getSetmealId());
+            Order order1 = orderDao.getOrderByMemberAndOrderDate(order.getMemberId(),new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate()));
+
+            System.out.println(order1);
             if (order1!=null){
                 throw new RuntimeException("订单已存在！");
             }
+            order.setOrderDate(new Date(order.getOrderDate().getTime()+86400000));
             orderDao.addOrder(order);
             return order;
         }
@@ -90,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Map findOrderMsgById(Integer id) {
         Map map = orderDao.findOrderMsgById(id);
+        System.out.println(map.get("orderDate"));
         return map;
     }
 }

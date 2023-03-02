@@ -23,7 +23,7 @@ public interface OrderDao {
      * @param
      * @return
      */
-    Order getOrderByMemberAndOrderDateAndSetmealId(Integer memberId, String format, Integer setmealId);
+    Order getOrderByMemberAndOrderDate(Integer memberId, String orderDate);
 
     /**
      * 查询订单详情

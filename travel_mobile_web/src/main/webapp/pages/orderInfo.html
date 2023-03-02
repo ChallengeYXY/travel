@@ -160,6 +160,15 @@
                                 if (resp.data.flag){
                                     //预约成功
                                     window.location.href="/pages/orderSuccess.html?orderId="+resp.data.data.id;
+                                    this.$message({
+                                        message: resp.data.message,
+                                        type: 'success'
+                                    });
+                                }else {
+                                    this.$message({
+                                        message: resp.data.message,
+                                        type: 'warning'
+                                    });
                                 }
                             }).catch();
                         }

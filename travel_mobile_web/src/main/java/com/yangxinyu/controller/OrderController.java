@@ -78,6 +78,7 @@ public class OrderController {
             //处理预约信息
             String setmealId = map.get("setmealId");
             Order order = new Order();
+            System.out.println(orderDate);
             order.setOrderDate(new SimpleDateFormat("yyyy-MM-dd").parse(orderDate));
             order.setOrderStatus(Order.ORDERSTATUS_NO);
             order.setSetmealId(Integer.parseInt(setmealId));
@@ -85,7 +86,7 @@ public class OrderController {
             return new Result(true, MessageConstant.ORDER_SUCCESS,orderResult);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(true, MessageConstant.ORDER_FAIL);
+            return new Result(false, MessageConstant.ORDER_FAIL);
         }
     }
 

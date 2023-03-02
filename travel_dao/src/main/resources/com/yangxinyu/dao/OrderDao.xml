@@ -11,7 +11,7 @@
     <!--根据人员编号与预定日期查询订单-->
     <select id="getOrderByMemberAndOrderDate" resultType="com.yangxinyu.entity.Order" parameterType="com.yangxinyu.entity.Order">
         SELECT member_id,orderDate,orderType,orderStatus,setmeal_id
-        FROM t_order WHERE member_id=#{memberId} AND orderDate=#{orderDate}
+        FROM t_order WHERE member_id=#{param1} AND orderDate=#{param2}
     </select>
     <!--连表查询订单详情-->
     <select id="findOrderMsgById" parameterType="integer" resultType="map">
