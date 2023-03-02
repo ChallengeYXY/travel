@@ -3,6 +3,8 @@ package com.yangxinyu.service;
 import com.yangxinyu.entity.Member;
 import com.yangxinyu.entity.Order;
 
+import java.util.Map;
+
 /**
  * @BelongsProject : travel
  * @BelongsPackage : com.yangxinyu.service
@@ -29,9 +31,16 @@ public interface OrderService {
     boolean checkOrderDate(String orderDate);
 
     /**
-     * 添加订单信息
+     * 添加订单信息回填主键
      * @param
      * @param order
      */
-    void addOrder(Member member, Order order);
+    Order addOrder(Member member, Order order);
+
+    /**
+     * 查询订单详情
+     * @param id
+     * @return
+     */
+    Map findOrderMsgById(Integer id);
 }

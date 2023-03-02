@@ -158,7 +158,8 @@
                             //提交预约信息
                             axios.post("/order/saveOrder",this.orderInfo).then((resp)=>{
                                 if (resp.data.flag){
-
+                                    //预约成功
+                                    window.location.href="/pages/orderSuccess.html?orderId="+resp.data.data.id;
                                 }
                             }).catch();
                         }

@@ -81,13 +81,17 @@ public class OrderController {
             order.setOrderDate(new SimpleDateFormat("yyyy-MM-dd").parse(orderDate));
             order.setOrderStatus(Order.ORDERSTATUS_NO);
             order.setSetmealId(Integer.parseInt(setmealId));
-            orderService.addOrder(member,order);
-            return new Result(true, MessageConstant.ORDER_SUCCESS);
+            Order orderResult = orderService.addOrder(member,order);
+            return new Result(true, MessageConstant.ORDER_SUCCESS,orderResult);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(true, MessageConstant.ORDER_FAIL);
         }
+    }
 
-
+    @RequestMapping("/findOrderMsgById")
+    public Result findOrderMsgById(Integer id){
+        Map map = orderService.findOrderMsgById(id);
+        return new Result(true,MessageConstant.QUERY_ORDER_SUCCESS,map);
     }
 }

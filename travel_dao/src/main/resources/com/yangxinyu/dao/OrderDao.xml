@@ -3,9 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxinyu.dao.OrderDao">
-    <insert id="addOrder" parameterType="com.yangxinyu.entity.Order">
+    <insert id="addOrder" parameterType="com.yangxinyu.entity.Order" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_order
             (member_id,orderDate,orderType,orderStatus,setmeal_id)
         VALUES(#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
     </insert>
+    <!--根据人员编号与预定日期查询订单-->
+    <select id="getOrderByMemberAndOrderDate" resultType="com.yangxinyu.entity.Order" parameterType="com.yangxinyu.entity.Order">
+        SELECT member_id,orderDate,orderType,orderStatus,setmeal_id
+        FROM t_order WHERE member_id=#{memberId} AND orderDate=#{orderDate}
+    </select>
+    <!--连表查询订单详情-->
+    <select id="findOrderMsgById" parameterType="integer" resultType="map">
+        SELECT o.orderDate orderDate,o.orderType orderType,m.name memberName,s.name setmealName
+        FROM t_order o,t_member m,t_setmeal s
+        WHERE o.member_id=m.id AND o.setmeal_id=s.id AND o.id=#{orderId}
+    </select>
 </mapper>

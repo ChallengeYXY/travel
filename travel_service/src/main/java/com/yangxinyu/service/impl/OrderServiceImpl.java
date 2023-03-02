@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
 /**
  * @BelongsProject : travel
  * @BelongsPackage : com.yangxinyu.service.impl
@@ -68,11 +71,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrder(Member member, Order order) {
+    public Order addOrder(Member member, Order order) {
         Member member1 = memberDao.getMemberByIdCard(member);
         if (member1!=null){
+            //获取人员id
             order.setMemberId(member1.getId());
+            //查询订单是否存在
+            Order order1 = orderDao.getOrderByMemberAndOrderDateAndSetmealId(order.getMemberId(),new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate()),order.getSetmealId());
+            if (order1!=null){
+                throw new RuntimeException("订单已存在！");
+            }
             orderDao.addOrder(order);
+            return order;
         }
+        return null;
+    }
+
+    @Override
+    public Map findOrderMsgById(Integer id) {
+        Map map = orderDao.findOrderMsgById(id);
+        return map;
     }
 }
