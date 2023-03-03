@@ -54,4 +54,22 @@
         SELECT id,`name`,`code`,helpCode,sex,age,price,remark,attention,img
         FROM t_setmeal WHERE id = #{id};
     </select>
+    <select id="getTravelGroupIds" parameterType="int" resultType="int">
+        SELECT travelgroup_id
+        FROM t_setmeal_travelgroup
+        WHERE setmeal_id=#{value }
+    </select>
+
+    <!--更新跟团游-->
+    <update id="updateSetmeal" parameterType="com.yangxinyu.entity.Setmeal">
+        UPDATE t_setmeal
+        SET `name`= #{name},`code`=#{code},helpCode=#{helpCode},sex=#{sex},age=#{age},price=#{price},remark=#{remark},attention=#{attention},img=#{img}
+        WHERE id=#{id}
+    </update>
+    <!--删除套餐与跟团游中间表-->
+    <update id="deleteSetmealAndTravelGroup" parameterType="int">
+        DELETE FROM t_setmeal_travelgroup
+        WHERE setmeal_id=#{value };
+    </update>
+
 </mapper>

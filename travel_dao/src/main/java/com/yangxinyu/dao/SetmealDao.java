@@ -45,4 +45,23 @@ public interface SetmealDao {
      * @return
      */
     Setmeal getSetmealByIdSimple(Integer id);
+
+    /**
+     * 根据套餐id查询组团游id
+     * @param id
+     * @return
+     */
+    List<Integer> getTravelGroupIds(Integer id);
+
+    /**
+     * 根据id更新套餐信息
+     * @param setmeal
+     */
+    void updateSetmeal(Setmeal setmeal);
+
+    /**
+     * 删除中间表
+     * @param setmealId
+     */
+    void deleteSetmealAndTravelGroup(Integer setmealId);
 }

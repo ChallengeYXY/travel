@@ -96,7 +96,7 @@
                         <el-table-column prop="remark" label="说明" align="center"></el-table-column>
                         <el-table-column label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini">编辑</el-button>
+                                <el-button type="primary" size="mini" @click="handleUpdate(scope.row.id)">编辑</el-button>
                                 <el-button size="mini" type="danger">删除</el-button>
                             </template>
                         </el-table-column>
@@ -217,9 +217,9 @@
                                     </el-tab-pane>
                                 </el-tabs>
                             </template>
-                            <div slot="footer" class="dialog-footer">
+                            <div slot="footer" class="dialog-footer" v-model="formData">
                                 <el-button @click="dialogFormVisible = false">取消</el-button>
-                                <el-button type="primary" @click="handleAdd()">确定</el-button>
+                                <el-button type="primary" @click="handleAdd(formData.id)">确定</el-button>
                             </div>
                         </el-dialog>
                     </div>
@@ -275,13 +275,21 @@
 				  return isJPG && isLt2M;
                 },
                 //添加
-                handleAdd () {
-                    axios.post("setmeal/addSetmeal?travelgroupIds="+this.travelgroupIds,this.formData).then((resp)=>{
+                handleAdd (id) {
+                    axios.post("setmeal/addSetmeal?travelgroupIds="+this.travelgroupIds+"&setmealId="+id,this.formData).then((resp)=>{
                         if (resp.data.flag = true){
-                            this.$message({
-                                message:"添加成功！",
-                                type:"success"
-                            });
+                            if (id==null){
+                                this.$message({
+                                    message:"添加成功！",
+                                    type:"success"
+                                });
+                            }else {
+                                this.$message({
+                                    message:"修改成功！",
+                                    type:"success"
+                                });
+                            }
+
 
                             //关闭添加窗口
                             this.dialogFormVisible = false;
@@ -350,7 +358,43 @@
                 handleCurrentChange(currentPage) {
                     this.pagination.currentPage = currentPage;
                     this.findPage();
+                },
+
+                //弹出修改窗口
+                handleUpdate(id){
+                    this.resetForm();
+                    //查询套餐信息
+                    axios.get("setmeal/getSetmealByIdSimple2?id="+id).then((resp)=>{
+                        if (resp.data.flag){
+                            this.formData=resp.data.data;
+                            this.imageUrl="http://rq9gw1i4c.hn-bkt.clouddn.com/"+resp.data.data.img;
+                        }
+                    }).catch();
+                    //请求回显所有跟团游
+                    axios.get("travelGroup/getAllTravelGroup").then((resp)=>{
+                        if (resp.data.flag==true){
+                            this.tableData = resp.data.data;
+                            this.dialogFormVisible = true;
+                            console.log(resp.data.data)
+                        }else {
+                            this.$message({
+                                message:"后台返回数据错误！",
+                                type:"error"
+                            });
+                        }
+                    }).catch((err)=>{
+                    }).finally(()=>{
+                    });
+                    //回显跟团游打钩数据
+                    axios.get("/setmeal/getTravelGroupIds?id="+id).then((resp)=>{
+                        if (resp.data.flag){
+                            this.travelgroupIds = resp.data.data;
+                        }
+                    }).catch();
+                    this.dialogFormVisible = true;
+
                 }
+
             }
         })
     </script>

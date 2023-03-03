@@ -67,6 +67,7 @@
             },
             mounted(){
                 axios.post("/order/findOrderMsgById?id=" + id).then((response) => {
+                    console.log(response.data.data.orderDate);
                     this.orderInfo = response.data.data;
                 });
             }

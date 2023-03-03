@@ -46,21 +46,33 @@ public class SetmealServiceImpl implements SetmealService {
      * @param setmeal
      */
     @Override
-    public void addSetmeal(Integer[] travelgroupIds, Setmeal setmeal) {
-        //添加套餐基本信息
-        setmealDao.addSetmeal(setmeal);
-        //获取回填主键
-        Integer setmealId = setmeal.getId();
-        //添加套餐游与跟团游中间表
-        for (Integer travelgroupId : travelgroupIds) {
-            setmealDao.addSetmealAndTravelGroup(setmealId,travelgroupId);
+    public void addSetmeal(Integer[] travelgroupIds,Integer setmealId, Setmeal setmeal) {
+        if (setmealId==null){
+            //添加套餐信息
+            //添加套餐基本信息
+            setmealDao.addSetmeal(setmeal);
+            //获取回填主键
+            Integer setmealId1 = setmeal.getId();
+            //添加套餐游与跟团游中间表
+            for (Integer travelgroupId : travelgroupIds) {
+                setmealDao.addSetmealAndTravelGroup(setmealId1,travelgroupId);
+            }
+        }else {
+            //修改套餐信息
+            setmealDao.updateSetmeal(setmeal);
+            //删除中间表信息
+            setmealDao.deleteSetmealAndTravelGroup(setmealId);
+            //添加套餐游与跟团游中间表
+            for (Integer travelgroupId : travelgroupIds) {
+                setmealDao.addSetmealAndTravelGroup(setmealId,travelgroupId);
+            }
         }
-
         //从后向前找到第一个/的位置，截取图片名
         int index = setmeal.getImg().lastIndexOf("/");
         String imgName = setmeal.getImg().substring(index+1);
         //将存储到数据库的图片名放到Redis的set
         jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES,imgName);
+
     }
 
     /**
@@ -109,5 +121,11 @@ public class SetmealServiceImpl implements SetmealService {
         jedisPoolResource.select(1);
         jedisPoolResource.set(RedisMessageConstant.SENDTYPE_ORDER+phone,messageCode.toString());
         jedisPoolResource.expire(RedisMessageConstant.SENDTYPE_ORDER+phone,300);
+    }
+
+    @Override
+    public List<Integer> getTravelGroupIds(Integer id) {
+        List<Integer> travelGroupIds =setmealDao.getTravelGroupIds(id);
+        return travelGroupIds;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -57,10 +58,11 @@ public class SetmealController {
      */
     @RequestMapping("/addSetmeal")
     public Result addSetmeal(@RequestParam("travelgroupIds") Integer[] travelgroupIds,
-                           @RequestBody Setmeal setmeal){
+                             @RequestParam(value = "setmealId",required = false) Integer setmealId,
+                             @RequestBody Setmeal setmeal){
 
         try {
-            setmealService.addSetmeal(travelgroupIds,setmeal);
+            setmealService.addSetmeal(travelgroupIds,setmealId,setmeal);
             return new Result(true,MessageConstant.ADD_SETMEAL_SUCCESS);
         } catch (Exception e) {
             return new Result(false,MessageConstant.ADD_SETMEAL_FAIL);
@@ -83,4 +85,20 @@ public class SetmealController {
         }
     }
 
+    /**
+     * 获取套餐简单信息，不包括组团和自由行
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getSetmealByIdSimple2")
+    public Result getSetmealByIdSimple(Integer id){
+        Setmeal setmeal = setmealService.getSetmealByIdSimple(id);
+        return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
+    }
+
+    @RequestMapping("/getTravelGroupIds")
+    public Result getTravelGroupIds(Integer id){
+        List<Integer> travelGroupIds = setmealService.getTravelGroupIds(id);
+        return new Result(true,"查询跟团游id成功！",travelGroupIds);
+    }
 }

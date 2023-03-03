@@ -30,7 +30,7 @@ public interface OrderDao {
      * @param id
      * @return
      */
-    Map findOrderMsgById(Integer id);
+    Map<String,Object> findOrderMsgById(Integer id);
 
 
 }

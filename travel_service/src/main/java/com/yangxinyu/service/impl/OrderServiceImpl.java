@@ -79,8 +79,6 @@ public class OrderServiceImpl implements OrderService {
             order.setMemberId(member1.getId());
             //查询订单是否存在
             Order order1 = orderDao.getOrderByMemberAndOrderDate(order.getMemberId(),new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate()));
-
-            System.out.println(order1);
             if (order1!=null){
                 throw new RuntimeException("订单已存在！");
             }
@@ -92,9 +90,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map findOrderMsgById(Integer id) {
-        Map map = orderDao.findOrderMsgById(id);
-        System.out.println(map.get("orderDate"));
+    public Map<String,Object> findOrderMsgById(Integer id) {
+        Map<String,Object> map = orderDao.findOrderMsgById(id);
+        Object orderDate = map.get("orderDate");
+        System.out.println(orderDate.toString());
+        map.put("orderDate",orderDate.toString());
         return map;
     }
 }

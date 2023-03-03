@@ -78,7 +78,6 @@ public class OrderController {
             //处理预约信息
             String setmealId = map.get("setmealId");
             Order order = new Order();
-            System.out.println(orderDate);
             order.setOrderDate(new SimpleDateFormat("yyyy-MM-dd").parse(orderDate));
             order.setOrderStatus(Order.ORDERSTATUS_NO);
             order.setSetmealId(Integer.parseInt(setmealId));
@@ -92,7 +91,8 @@ public class OrderController {
 
     @RequestMapping("/findOrderMsgById")
     public Result findOrderMsgById(Integer id){
-        Map map = orderService.findOrderMsgById(id);
+        Map<String,String> map = orderService.findOrderMsgById(id);
+        System.out.println(map.get("orderDate"));
         return new Result(true,MessageConstant.QUERY_ORDER_SUCCESS,map);
     }
 }

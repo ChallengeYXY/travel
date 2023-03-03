@@ -17,7 +17,7 @@ public interface SetmealService {
      * @param travelgroupIds
      * @param setmeal
      */
-    public void addSetmeal(Integer[] travelgroupIds, Setmeal setmeal);
+    public void addSetmeal(Integer[] travelgroupIds,Integer setmealId,Setmeal setmeal);
 
     /**
      * 分页查询套餐游
@@ -51,4 +51,11 @@ public interface SetmealService {
      * @param phone
      */
     void sendMessageCode(String phone) throws Exception;
+
+    /**
+     * 根据套餐id查询跟团游id
+     * @param id
+     * @return
+     */
+    List<Integer> getTravelGroupIds(Integer id);
 }
