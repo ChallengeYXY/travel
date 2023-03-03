@@ -20,4 +20,10 @@ public interface TravelGroupService {
     void addTravelgroupAndTravelitem(Integer travelGroupId, Integer[] travelItemIds);
 
     List<TravelGroup> getAllTravelGroup();
+
+    /**
+     * 根据id删除报团游
+     * @param id
+     */
+    void deleteById(Integer id);
 }

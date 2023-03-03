@@ -58,4 +58,10 @@ public interface SetmealService {
      * @return
      */
     List<Integer> getTravelGroupIds(Integer id);
+
+    /**
+     * 删除套餐
+     * @param id
+     */
+    void deleteById(Integer id);
 }

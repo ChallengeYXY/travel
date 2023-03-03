@@ -101,4 +101,14 @@ public class SetmealController {
         List<Integer> travelGroupIds = setmealService.getTravelGroupIds(id);
         return new Result(true,"查询跟团游id成功！",travelGroupIds);
     }
+
+    @RequestMapping("/deleteById")
+    public Result deleteById(Integer id){
+        try {
+            setmealService.deleteById(id);
+            return new Result(false,"删除套餐成功！");
+        } catch (Exception e) {
+            return new Result(true,"删除套餐失败！");
+        }
+    }
 }

@@ -33,12 +33,6 @@ public interface SetmealDao {
      */
     List<Setmeal> getAll();
 
-    /**
-     * 根据id获取套餐详情
-     * @param id
-     * @return
-     */
-    Setmeal getSetmealById(Integer id);
 
     /**
      * 根据id获取套餐简单信息
@@ -64,4 +58,16 @@ public interface SetmealDao {
      * @param setmealId
      */
     void deleteSetmealAndTravelGroup(Integer setmealId);
+
+    /**
+     * 删除套餐与跟团游中间表
+     * @param id
+     */
+    void deleteSetmealAndTravelGroupById(Integer id);
+
+    /**
+     * 删除套餐
+     * @param id
+     */
+    void deleteSetmealById(Integer id);
 }

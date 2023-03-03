@@ -378,7 +378,10 @@
 						// 发送ajax请求，执行删除
                         axios.get("travelItem/delete?id=" + row.id).then((resp)=>{
                             if (resp.data.flag==true){
-                                console.log(resp.data.message);
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
                             }else{
                                 console.log(resp.data.message);
                             }
@@ -387,10 +390,6 @@
 
                         });
 
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						});
 					}).catch(() => {
 						this.$message({
 							type: 'info',

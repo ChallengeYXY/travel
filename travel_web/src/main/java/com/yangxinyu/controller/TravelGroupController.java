@@ -102,4 +102,14 @@ public class TravelGroupController {
             return new Result(false,MessageConstant.QUERY_TRAVELGROUP_FAIL);
         }
     }
+
+    @RequestMapping("/deleteById")
+    public Result deleteById(Integer id){
+        try {
+            travelGroupService.deleteById(id);
+            return new Result(true,MessageConstant.DELETE_TRAVELGROUP_SUCCESS);
+        } catch (Exception e) {
+            return new Result(false,MessageConstant.DELETE_TRAVELGROUP_FAIL);
+        }
+    }
 }

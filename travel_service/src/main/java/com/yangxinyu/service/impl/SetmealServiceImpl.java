@@ -5,9 +5,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yangxinyu.constant.RedisMessageConstant;
 import com.yangxinyu.dao.SetmealDao;
+import com.yangxinyu.dao.TravelGroupDao;
 import com.yangxinyu.entity.PageResult;
 import com.yangxinyu.entity.QueryPageBean;
 import com.yangxinyu.entity.Setmeal;
+import com.yangxinyu.entity.TravelGroup;
 import com.yangxinyu.qiniu.QiniuUtils;
 import com.yangxinyu.qiniu.RedisConstant;
 import com.yangxinyu.service.SetmealService;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +27,8 @@ public class SetmealServiceImpl implements SetmealService {
     @Autowired
     private SetmealDao setmealDao;
 
+    @Autowired
+    private TravelGroupDao travelGroupDao;
     @Autowired
     private JedisPool jedisPool;
     /**
@@ -47,6 +52,10 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public void addSetmeal(Integer[] travelgroupIds,Integer setmealId, Setmeal setmeal) {
+        //从后向前找到第一个/的位置，截取图片名
+        int index = setmeal.getImg().lastIndexOf("/");
+        String imgName = setmeal.getImg().substring(index+1);
+        setmeal.setImg(imgName);
         if (setmealId==null){
             //添加套餐信息
             //添加套餐基本信息
@@ -67,9 +76,7 @@ public class SetmealServiceImpl implements SetmealService {
                 setmealDao.addSetmealAndTravelGroup(setmealId,travelgroupId);
             }
         }
-        //从后向前找到第一个/的位置，截取图片名
-        int index = setmeal.getImg().lastIndexOf("/");
-        String imgName = setmeal.getImg().substring(index+1);
+
         //将存储到数据库的图片名放到Redis的set
         jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES,imgName);
 
@@ -100,7 +107,15 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public Setmeal getSetmealById(Integer id) {
-        Setmeal setmeal = setmealDao.getSetmealById(id);
+        //查询简单信息
+        Setmeal setmeal = setmealDao.getSetmealByIdSimple(id);
+        //查询中间表
+        List<TravelGroup> travelGroups = new ArrayList<>();
+        for (Integer travelGroupId : setmealDao.getTravelGroupIds(id)) {
+            //查询跟团游
+            travelGroups.add(travelGroupDao.getTravelGroupById(travelGroupId));
+        }
+        setmeal.setTravelGroups(travelGroups);
         return setmeal;
     }
 
@@ -127,5 +142,13 @@ public class SetmealServiceImpl implements SetmealService {
     public List<Integer> getTravelGroupIds(Integer id) {
         List<Integer> travelGroupIds =setmealDao.getTravelGroupIds(id);
         return travelGroupIds;
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        //删除中间表
+        setmealDao.deleteSetmealAndTravelGroupById(id);
+        //删除套餐
+        setmealDao.deleteSetmealById(id);
     }
 }

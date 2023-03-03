@@ -86,4 +86,12 @@ public class TravelGroupServiceImpl implements TravelGroupService {
         List<TravelGroup> travelGroups = travelGroupDao.getAllTravelGroup();
         return travelGroups;
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        //删除中间表
+        travelGroupDao.deleteTravelGroupAndTravelItemById(id);
+        //删除跟团游
+        travelGroupDao.deleteTravelGroupById(id);
+    }
 }

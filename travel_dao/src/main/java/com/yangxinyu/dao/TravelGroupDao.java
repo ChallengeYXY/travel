@@ -23,4 +23,16 @@ public interface TravelGroupDao {
     void deleteAllByTravelGroupId(Integer travelGroupId);
 
     List<TravelGroup> getAllTravelGroup();
+
+    /**
+     * 根据组团游id删除中间表
+     * @param id
+     */
+    void deleteTravelGroupAndTravelItemById(Integer id);
+
+    /**
+     * 删除跟团游
+     * @param id
+     */
+    void deleteTravelGroupById(Integer id);
 }

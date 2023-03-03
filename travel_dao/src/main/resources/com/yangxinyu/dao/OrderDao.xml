@@ -19,4 +19,5 @@
         FROM t_order o,t_member m,t_setmeal s
         WHERE o.member_id=m.id AND o.setmeal_id=s.id AND o.id=#{orderId}
     </select>
+
 </mapper>

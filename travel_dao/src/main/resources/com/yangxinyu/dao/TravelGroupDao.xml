@@ -93,6 +93,17 @@
                ti.`code` travelitem_code,ti.`name` travelitem_name,ti.sex travelitem_sex,ti.age travelitem_age,ti.price travelitem_price,ti.type travelitem_type,ti.attention travelitem_attention,ti.remark travelitem_remark
         FROM (t_travelgroup_travelitem tgi RIGHT JOIN t_travelgroup tg ON tgi.travelgroup_id=tg.id) LEFT JOIN t_travelitem ti ON travelitem_id=ti.id
     </select>
+
+    <!--根据跟团游ID删除中间表-->
+    <delete id="deleteTravelGroupAndTravelItemById" parameterType="int">
+        DELETE FROM t_travelgroup_travelitem
+        WHERE travelgroup_id=#{value }
+    </delete>
+    <!--删除跟团游-->
+    <delete id="deleteTravelGroupById" parameterType="int">
+        DELETE FROM t_travelgroup
+        WHERE id=#{value }
+    </delete>
 </mapper>
 
 

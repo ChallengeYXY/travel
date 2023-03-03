@@ -30,30 +30,12 @@
         FROM t_setmeal
     </select>
 
-    <select id="getSetmealById" resultType="com.yangxinyu.entity.Setmeal" resultMap="findByIdResultMap" parameterType="int">
-        select * from t_setmeal where id=#{id}
-    </select>
-    <resultMap type="com.yangxinyu.entity.Setmeal" id="findByIdResultMap">
-        <id column="id" property="id"/>
-        <result column="name" property="name"/>
-        <result column="code" property="code"/>
-        <result column="helpCode" property="helpCode"/>
-        <result column="sex" property="sex"/>
-        <result column="age" property="age"/>
-        <result column="price" property="price"/>
-        <result column="remark" property="remark"/>
-        <result column="attention" property="attention"/>
-        <result column="img" property="img"/>
-        <collection property="travelGroups" column="id" select="com.yangxinyu.dao.TravelGroupDao.getTravelGroupById"></collection>
-    </resultMap>
-
-
-
     <!--根据id套餐简单信息-->
     <select id="getSetmealByIdSimple" parameterType="int" resultType="com.yangxinyu.entity.Setmeal">
         SELECT id,`name`,`code`,helpCode,sex,age,price,remark,attention,img
         FROM t_setmeal WHERE id = #{id};
     </select>
+    <!--查询中间表-->
     <select id="getTravelGroupIds" parameterType="int" resultType="int">
         SELECT travelgroup_id
         FROM t_setmeal_travelgroup
@@ -71,5 +53,14 @@
         DELETE FROM t_setmeal_travelgroup
         WHERE setmeal_id=#{value };
     </update>
-
+    <!--删除套餐中间表-->
+    <delete id="deleteSetmealAndTravelGroupById" parameterType="int">
+        DELETE FROM t_setmeal_travelgroup
+        WHERE setmeal_id=#{value }
+    </delete>
+    <!--删除套餐-->
+    <delete id="deleteSetmealById" parameterType="int">
+        DELETE FROM t_setmeal
+        WHERE id=#{value }
+    </delete>
 </mapper>
